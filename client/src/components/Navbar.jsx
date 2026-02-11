@@ -33,19 +33,23 @@ function Navbar() {
     }, [searchQuery]);
 
     return (
-        <nav className="flex items-center justify-between px-6 md:px-16 lg:px-10 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all z-50">
+
+       
+
+  <nav className="flex items-center justify-between px-6 md:px-16 lg:px-10 xl:px-25 py-4 border-b border-gray-300 bg-white relative transition-all z-50">
             <NavLink to='/' onClick={() => setOpen(false)}>
                 <img className='h-20' src={assets.logo} alt='logo' />
             </NavLink>
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-6 ml-7">
-            <NavLink to="/" className="flex items-center gap-3 group">
-  
-  <button className="border border-gray-300 px-3 py-1 rounded-full text-xs cursor-pointer opacity-80">
-    Seller Dashboard
-  </button>
 
-  <div className="relative overflow-hidden h-6">
+                  <NavLink to="/seller">
+    <button className="border border-gray-300 px-3 py-1 rounded-full text-xs cursor-pointer opacity-80">
+      Seller Dashboard
+    </button>
+  </NavLink>
+            <NavLink to="/" className="flex items-center gap-3 group">
+          <div className="relative overflow-hidden h-6">
     <span className="block group-hover:-translate-y-full transition-transform duration-300">
       Home
     </span>
@@ -58,7 +62,7 @@ function Navbar() {
 
 
                 <NavLink to="/products" className="relative overflow-hidden h-6 group">
-                    <span className="block group-hover:-translate-y-full transition-transform duration-300">All Products</span>
+                    <span className="block whitespace-nowrap group-hover:-translate-y-full transition-transform duration-300">All Products</span>
                     <span className="block absolute top-full left-0 group-hover:translate-y-[-100%] transition-transform duration-300">All Products</span>
                 </NavLink>
 
