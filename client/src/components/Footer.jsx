@@ -10,8 +10,8 @@ function Footer() {
         </div>
 
         {/* Copyright */}
-        <p className="mt-4 text-center text-gray-700"> Copyright © 2025{" "}
-            <a href="#" className="underline hover:text-emerald-900"> GreenCart </a>
+        <p className="mt-4 text-center text-gray-700"> Copyright © 2026{" "}
+            <a href="#" className="underline hover:text-emerald-900"> KhaoFresh </a>
             . All rights reserved.
         </p>
 
