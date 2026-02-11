@@ -40,6 +40,7 @@ function Navbar() {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-6 ml-7">
                 <NavLink to="/" className="relative overflow-hidden h-6 group">
+                 <button class="border border-gray-300 px-3 py-1 rounded-full text-xs cursor-pointer opacity-80" fdprocessedid="zocp48">Seller Dashboard</button>
                     <span className="block group-hover:-translate-y-full transition-transform duration-300">Home</span>
                     <span className="block absolute top-full left-0 group-hover:translate-y-[-100%] transition-transform duration-300">Home</span>
                 </NavLink>
