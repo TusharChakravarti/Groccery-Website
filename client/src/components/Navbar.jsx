@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets.js'
 import { useAppContext } from '../context/AppContext.jsx'
 import { useState } from 'react'
-import { HashLink } from "react-router-hash-link";
+
 import toast from 'react-hot-toast'
 
 function Navbar() {
