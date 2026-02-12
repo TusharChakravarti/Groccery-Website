@@ -16,7 +16,7 @@ function Footer() {
         </p>
 
         {/* Social Icons */}
-        <div className="flex items-center gap-6 mt-5 text-2xl">
+        <div className="flex items-center gap-6 mt-5 text-2xl" id="contact">
             <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-blue-600" > <FaFacebookF /> </a>
             <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-purple-600" > <FaInstagram /> </a>
             <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-blue-400" > <FaLinkedinIn /> </a>
