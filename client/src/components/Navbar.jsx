@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 function Navbar() {
     const [open, setOpen] = useState(false);
     const { user, setUser, setShowUserLogin, navigate, setSearchQuery,
-             searchQuery, getCartAmount, getCartCount, axios } = useAppContext();
+             searchQuery, getCartAmount,setCartItems, setIsSeller,getCartCount, axios } = useAppContext();
 
     const logout = async () => {
         try {
@@ -17,6 +17,8 @@ function Navbar() {
             if(data.success){
                 toast.success(data.message);
                 setUser(null);
+                setCartItems({});
+                setIsSeller(false)
                 navigate('/');
             }
             else{
@@ -37,7 +39,7 @@ function Navbar() {
 
        
 
-  <nav className="flex items-center justify-between px-6 md:px-16 lg:px-10 xl:px-25 py-4 border-b border-gray-300 bg-white relative transition-all z-50">
+  <nav className="flex items-center justify-between px-6 md:px-5 lg:px-2 xl:px-10 py-4 border-b border-gray-300 bg-white relative transition-all z-50">
             <NavLink to='/' onClick={() => setOpen(false)}>
                 <img className='h-20' src={assets.logo} alt='logo' />
             </NavLink>

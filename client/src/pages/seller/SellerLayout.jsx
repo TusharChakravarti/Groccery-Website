@@ -18,6 +18,7 @@ function SellerLayout() {
             const { data } = await axios.get('/api/seller/logout');
             if(data.success){
                 toast.success(data.message);
+                setIsSeller(false);
                 navigate('/');
             }
             else{

@@ -46,8 +46,23 @@ export const AppContextProvider = ( {children} ) => {
             }
         } catch (error) {
             setUser(null);
+            
         }
     }
+    const logoutclear = async () => {
+    try {
+        // Optional: Call your backend logout API if you have one
+        // await axios.post('/api/user/logout');
+        
+        setUser(null);
+        setIsSeller(false);
+        setCartItems({}); // <--- This clears the cart in state
+        navigate('/');
+        toast.success("Logged out successfully");
+    } catch (error) {
+        toast.error("Logout failed");
+    }
+}
 
     // Fetch all products
     const fetchProducts = async () => {
