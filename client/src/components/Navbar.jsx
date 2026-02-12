@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets.js'
 import { useAppContext } from '../context/AppContext.jsx'
 import { useState } from 'react'
+import { HashLink } from "react-router-hash-link";
 import toast from 'react-hot-toast'
 
 function Navbar() {
@@ -117,7 +118,7 @@ function Navbar() {
                     {user && (
                         <NavLink to='/my-orders' onClick={() => setOpen(false)}>My Orders</NavLink>
                     )}
-                    <NavLink to='/#contact' onClick={() => setOpen(false)}>Contact</NavLink>
+                 <HashLink smooth to="/#contact" onClick={() => setOpen(false)}>Contact</HashLink>
 
                     {!user ? (
                         <button onClick={() =>{ setOpen(false); setShowUserLogin(true);}} className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
