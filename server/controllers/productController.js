@@ -41,6 +41,30 @@ export const productById = async (req, res) => {
     }
 }
 
+
+// delete product : /api/product/remove
+export const deleteProduct = async (req, res) => {
+    try {
+        const { id } = req.body;
+        
+
+        const deletedProduct = await Product.findByIdAndDelete(id);
+
+        if (!deletedProduct) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+
+        res.json({ success: true, message: "Product deleted successfully" });
+        
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+
+
+
 // Change Product inStock : /api/product/stock
 export const changeStock = async (req, res) => {
     try {
