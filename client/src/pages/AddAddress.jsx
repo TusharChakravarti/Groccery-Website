@@ -9,8 +9,12 @@ const InputField = ({ type, placeholder, name, handleChange, address}) => (
         type={type} placeholder={placeholder} name={name} onChange={handleChange} value={address[name]} required />
 );
 
+
+
+
+
 function AddAddress() {
-    const { axios, user, navigate} = useAppContext();
+  const { axios, user, navigate, setShowUserLogin } = useAppContext();
 
     const [address, setAddress] = useState({
         firstName: '',
@@ -48,8 +52,12 @@ function AddAddress() {
         }
     }
 
+
+
     useEffect(() => {
         if(!user){
+            toast.error("Please login first");
+            setShowUserLogin(true); 
             navigate('/cart');
         }
     }, []);
