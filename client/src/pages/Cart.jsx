@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const Cart = () => {
     const { products, currency, cartItems, setCartItems, removeFromCart, getCartCount, updateCartItem,
-        navigate, getCartAmount, axios, user } = useAppContext();
+        navigate, getCartAmount, axios, user} = useAppContext();
 
     const [ cartArray, setCartArray] = useState([]);
     const [ addresses, setAddresses] = useState([]);

@@ -37,8 +37,8 @@ function Orders() {
                         <div>
                             {order.items.map((item, index) => (
                                 <div key={index} className="flex flex-col">
-                                    <p className="font-medium">
-                                        {item.product.name} {" "} <span className='text-primary'>x {item.quantity}</span>
+                                            <p className="font-medium">
+                                        {item.product?.name || "Product Deleted"} {" "} <span className='text-primary'>x {item.quantity}</span>
                                     </p>
                                 </div>
                             ))}

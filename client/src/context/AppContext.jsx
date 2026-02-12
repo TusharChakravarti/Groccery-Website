@@ -51,12 +51,12 @@ export const AppContextProvider = ( {children} ) => {
     }
     const logoutclear = async () => {
     try {
-        // Optional: Call your backend logout API if you have one
+        
         // await axios.post('/api/user/logout');
         
         setUser(null);
         setIsSeller(false);
-        setCartItems({}); // <--- This clears the cart in state
+        setCartItems({});
         navigate('/');
         toast.success("Logged out successfully");
     } catch (error) {
@@ -107,7 +107,8 @@ export const AppContextProvider = ( {children} ) => {
         let totalAmount = 0;
         for(const items in cartItems){
             let itemInfo = products.find((product) => product._id === items);
-            if(cartItems[items] > 0){
+            if(itemInfo&&cartItems[items] > 0){
+            
                 totalAmount += itemInfo.offerPrice * cartItems[items];
             }
         }
@@ -161,7 +162,7 @@ export const AppContextProvider = ( {children} ) => {
     const value = { navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setCartItems,
             setShowUserLogin, products, currency, addToCart, updateCartItem,
             removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, axios,
-            fetchProducts, fetchUser };
+            fetchProducts, fetchUser,logoutclear };
     
     return <AppContext.Provider value={value}>
         {children}

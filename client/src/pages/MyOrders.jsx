@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext.jsx'
-import { dummyOrders } from '../assets/assets.js';
+
 
 function MyOrders() {
     const [myOrders, setMyOrders] = useState([]);
-    const { currency, axios, user } = useAppContext();
+
+    const { currency, axios, user, backendUrl } = useAppContext();
 
     const fetchMyOrders = async () => {
         try {
+            
             const { data } = await axios.get('/api/order/user');
             if(data.success){
                 setMyOrders(data.orders);
@@ -36,29 +38,62 @@ function MyOrders() {
                     <span>Payment: {order.paymentType}</span>
                     <span>Total Amount: {currency}{order.amount}</span>
                 </p>
-                {order.items.map((item, index) => (
-                    <div key={index} className={`relative bg-white text-gray-500/70 
-                    ${order.items.length !== index + 1 && "border-b"} border-gray-300 flex flex-col 
-                    md:flex-row md:items-center justify-between p-4 py-5 md:gap-16 w-full max-w-4xl`}>
-                        <div className='flex items-center mb-4 md:mb-0'>
-                            <div className='bg-primary/10 p-4 rounded-lg'>
-                                <img src={item.product.images[0]} alt="" className='w-16 h-16' />
+                {order.items.map((item, itemIndex) => {
+                    
+                  
+                    if (!item.product) {
+                        return (
+                            <div key={itemIndex} className={`relative bg-gray-50 text-gray-400 
+                            ${order.items.length !== itemIndex + 1 && "border-b"} border-gray-300 flex flex-col 
+                            md:flex-row md:items-center justify-between p-4 py-5 md:gap-16 w-full max-w-4xl`}>
+                                <div className='flex items-center mb-4 md:mb-0'>
+                                    <div className='bg-gray-200 p-4 rounded-lg w-16 h-16 flex items-center justify-center'>
+                                        <span className='text-xs'>N/A</span>
+                                    </div>
+                                    <div className='ml-4'>
+                                        <h2 className='text-xl font-medium'>Product Unavailable</h2>
+                                        <p className='text-sm italic'>Item removed from store</p>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col justify-center md:ml-8 mb-4 md:mb-0'>
+                                    <p>Quantity: {item.quantity}</p>
+                                    <p>Status: {order.status}</p>
+                                    <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                                </div>
+                                <p className='text-gray-400 text-lg font-medium'>-</p>
                             </div>
-                            <div className='ml-4'>
-                                <h2 className='text-xl font-medium text-gray-800'>{item.product.name}</h2>
-                                <p>Category: {item.product.category}</p>
+                        )
+                    }
+                   
+
+                    return (
+                        <div key={itemIndex} className={`relative bg-white text-gray-500/70 
+                        ${order.items.length !== itemIndex + 1 && "border-b"} border-gray-300 flex flex-col 
+                        md:flex-row md:items-center justify-between p-4 py-5 md:gap-16 w-full max-w-4xl`}>
+                            <div className='flex items-center mb-4 md:mb-0'>
+                                <div className='bg-primary/10 p-4 rounded-lg'>
+                                    {item.product.images && item.product.images[0] ? (
+                                         <img src={item.product.images[0]} alt="" className="w-16 h-16 object-cover" />
+                                    ) : (
+                                         <div className="w-16 h-16 bg-gray-200"></div>
+                                    )}
+                                </div>
+                                <div className='ml-4'>
+                                    <h2 className='text-xl font-medium text-gray-800'>{item.product.name}</h2>
+                                    <p>Category: {item.product.category}</p>
+                                </div>
                             </div>
+                            <div className='flex flex-col justify-center md:ml-8 mb-4 md:mb-0'>
+                                <p>Quantity: {item.quantity || "1"}</p>
+                                <p>Status: {order.status}</p>
+                                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                            </div>
+                            <p className='text-primary-dull text-lg font-medium'>
+                                Amount: {currency}{item.product.offerPrice * item.quantity}
+                            </p>
                         </div>
-                        <div className='flex flex-col justify-center md:ml-8 mb-4 md:mb-0'>
-                            <p>Quantity: {item.quantity || "1"}</p>
-                            <p>Status: {order.status}</p>
-                            <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                        </div>
-                        <p className='text-primary-dull text-lg font-medium'>
-                            Amount: {currency}{item.product.offerPrice * item.quantity}
-                        </p>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
         ))}
     </div>

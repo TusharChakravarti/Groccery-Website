@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { toast } from "react-hot-toast";
-import axios from 'axios'
+
 
 function ProductList() {
   const { products, currency, axios, fetchProducts } = useAppContext();
