@@ -51,13 +51,9 @@ const RecipeAI = () => {
         </button>
       </div>
 
-      {recipe && (
-        <div className="mt-4 p-4 bg-white rounded border">
-          <h3 className="font-bold mb-2">Suggested Recipe:</h3>
-         
-{recipe && (
+   {recipe && (
   <div className="mt-4 p-4 bg-white rounded border">
-    <h3 className="font-bold mb-2">Suggested Recipe:</h3>
+  
 
     <p className="text-lg font-semibold text-green-700">{recipe.name}</p>
     <p className="text-sm text-gray-500 mb-2">⏱ Prep Time: {recipe.prepTime}</p>
@@ -69,9 +65,6 @@ const RecipeAI = () => {
     <p className="whitespace-pre-line text-gray-700">{recipe.instructions}</p>
   </div>
 )}
-
-        </div>
-      )}
     </div>
   );
 };
