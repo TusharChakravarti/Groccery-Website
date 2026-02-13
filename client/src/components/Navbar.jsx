@@ -69,7 +69,7 @@ function Navbar() {
                     <span className="block absolute top-full left-0 group-hover:translate-y-[-100%] transition-transform duration-300">All Products</span>
                 </NavLink>
 
-                <NavLink to="/" className="relative overflow-hidden h-6 group">
+                <NavLink to="/contact" className="relative overflow-hidden h-6 group">
                     <span className="block group-hover:-translate-y-full transition-transform duration-300">Contact</span>
                     <span className="block absolute top-full left-0 group-hover:translate-y-[-100%] transition-transform duration-300">Contact</span>
                 </NavLink>

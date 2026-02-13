@@ -17,6 +17,7 @@ import AddProduct from "./pages/seller/AddProduct";
 import ProductList from "./pages/seller/ProductList.jsx"
 import Orders from "./pages/seller/Orders.jsx"
 import Loading from "./components/Loading.jsx"
+import Contact from './pages/Contact';
 
 function App() {
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -42,7 +43,9 @@ function App() {
               <Route index element={isSeller ? <AddProduct /> : null} />
               <Route path="/seller/product-list" element={<ProductList />} />
               <Route path="/seller/orders" element={<Orders />} />
+
             </Route>
+            <Route path='/contact' element={<Contact />} />
           </Routes>
         </div>
         {!isSellerPath && <Footer />}
@@ -52,3 +55,8 @@ function App() {
 }
 
 export default App
+
+
+
+
+
