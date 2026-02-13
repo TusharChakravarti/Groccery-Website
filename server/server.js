@@ -64,9 +64,13 @@ app.post("/api/ai/recipe", async (req, res) => {
       return res.status(400).json({ success: false, message: "Ingredients required" });
     }
 
-    const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"}); 
+    const model = genAI.getGenerativeModel({model: "gemini-2.5-flash",
+        systemInstruction: "Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. If the user asks who you are or what your name is, respond as Chef KhaoFresh. Only suggest Indian recipes."
+    }); 
 
-    const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
+const prompt = `The user provided these ingredients: "${ingredients}". 
+    If these are valid ingredients, provide a short Indian recipe. 
+    If the user is asking a question or the input isn't ingredients, answer as Chef KhaoFresh and kindly ask for ingredients.`;
 
     const result = await model.generateContent(prompt);
    console.log(result.response.text());
