@@ -12,7 +12,7 @@ import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import { stripeWebhooks } from './controllers/orderController.js';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+//import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -60,24 +60,24 @@ app.listen(port, () => {
 });
 
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+//const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 
 
-app.post('/api/ai/recipe', async (req, res) => {
-    try {
-        const { ingredients } = req.body;
-        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+// app.post('/api/ai/recipe', async (req, res) => {
+//     try {
+//         const { ingredients } = req.body;
+//         const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
-        const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
+//         const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+//         const result = await model.generateContent(prompt);
+//         const response = await result.response;
+//         const text = response.text();
 
-        res.json({ success: true, recipe: text });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "AI is thinking..." });
-    }
-});
+//         res.json({ success: true, recipe: text });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "AI is thinking..." });
+//     }
+// });
