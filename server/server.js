@@ -70,14 +70,18 @@ app.post("/api/ai/recipe", async (req, res) => {
 
 const prompt = `The user provided these ingredients: "${ingredients}". 
     If these are valid ingredients, provide a short Indian recipe. 
-    If the user is asking a question or the input isn't ingredients, answer as Chef KhaoFresh and kindly ask for ingredients.`;
+    If the user is asking a question or the input isn't ingredients, answer as Chef KhaoFresh and kindly ask for ingredients.
+    Return the response STRICTLY as a JSON object with these keys: 
+  "name", "prepTime", "ingredients" (array), and "instructions" (array).
+  Do not include any markdown formatting like \`\`\`json. `;
 
     const result = await model.generateContent(prompt);
+    const recipeData = JSON.parse(result.response.text());
    console.log(result.response.text());
     res.json({
       success: true,
       
-      recipe: result.response.text(),
+      recipe: recipeData,
     });
   } catch (error) {
     console.log("Gemini Error:", error.message);
