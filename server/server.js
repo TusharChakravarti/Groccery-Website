@@ -20,7 +20,7 @@ const port = process.env.PORT || 8000;
 
 
 // Initialize AI with your Key
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+//const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // Connect to Services
 await connectDB();
 await connectCloudinary();
