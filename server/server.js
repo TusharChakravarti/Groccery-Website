@@ -12,11 +12,11 @@ import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import { stripeWebhooks } from './controllers/orderController.js';
-
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
 const port = process.env.PORT || 8000;
-
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 
 
@@ -56,6 +56,31 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
+
+app.post("/api/ai/recipe", async (req, res) => {
+  try {
+    const { ingredients } = req.body;
+
+    if (!ingredients) {
+      return res.status(400).json({ success: false, message: "Ingredients required" });
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
+
+    const result = await model.generateContent(prompt);
+
+    res.json({
+      success: true,
+      recipe: result.response.text(),
+    });
+  } catch (error) {
+    console.log("Gemini Error:", error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 
 app.listen(port, () => {
     console.log(`PORT connected on ${port}`);

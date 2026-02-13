@@ -10,7 +10,8 @@ const RecipeAI = () => {
     setLoading(true);
     try {
     
-      const { data } = await axios.post('http://localhost:8000/api/ai/recipe', { ingredients });
+await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/ai/recipe`, { ingredients })
+
       setRecipe(data.recipe);
     } catch (error) {
       console.error(error);
