@@ -36,6 +36,9 @@ const allowedOrigins = ['http://localhost:5173', 'https://khaofresh-eta.vercel.a
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
 // Middleware Configuration
+
+app.use(cors());
+app.options("*", cors());
 app.use(express.json()); 
 app.use(cookieParser());
 app.use((req, res, next) => {
