@@ -69,9 +69,8 @@ app.post("/api/ai/recipe", async (req, res) => {
     }); 
 
 const prompt = `The user provided these ingredients: "${ingredients}". 
-      Give the response in more formal way lie a chef in bullets points wherever required. 
+  Give the response in more formal way lie a chef in bullets points wherever required. 
     If these are valid ingredients, provide a short Indian recipe.
-     
      Return the response STRICTLY as a JSON object with these keys: 
   "name", "prepTime", "ingredients" (array), and "instructions" (array).
   Do not include any markdown formatting like \`\`\`json. `;
