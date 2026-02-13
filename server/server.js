@@ -33,7 +33,13 @@ app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 // Middleware Configuration
 
 app.use(cors({
-  origin: "https://khaofresh-eta.vercel.app",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
@@ -68,7 +74,7 @@ app.post("/api/ai/recipe", async (req, res) => {
       return res.status(400).json({ success: false, message: "Ingredients required" });
     }
 
-    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"}); 
 
     const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
 
