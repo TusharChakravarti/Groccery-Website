@@ -11,10 +11,12 @@ const RecipeAI = () => {
     try {
     
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const request = axios.post(`${backendUrl}/api/user/login`, data);
+      const request = await axios.post(`${backendUrl}/api/user/recipe`, {ingredients});
 
       setRecipe(request.data.recipe);
     } catch (error) {
+        
+        
       console.error(error);
     } finally {
       setLoading(false);
