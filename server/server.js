@@ -12,13 +12,11 @@ import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import { stripeWebhooks } from './controllers/orderController.js';
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
 const port = process.env.PORT || 8000;
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 
 
@@ -66,28 +64,22 @@ app.post("/api/ai/recipe", async (req, res) => {
       return res.status(400).json({ success: false, message: "Ingredients required" });
     }
 
+    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"}); 
+
     const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // fast and capable
-      messages: [
-        { role: "user", content: prompt }
-      ],
-      max_tokens: 150
-    });
-
-    const recipe = response.choices[0].message.content;
+    const result = await model.generateContent(prompt);
 
     res.json({
       success: true,
-      recipe
+      recipe: result.response.text(),
     });
-
   } catch (error) {
-    console.log("OpenAI Error:", error.message);
+    console.log("Gemini Error:", error.message);
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
 
 app.listen(port, () => {
     console.log(`PORT connected on ${port}`);
