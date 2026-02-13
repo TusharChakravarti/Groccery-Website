@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 
 const AddProduct = () => {
+    const [loading, setLoading] = useState(false);
     const [files, setFiles] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -12,11 +13,12 @@ const AddProduct = () => {
     const [price, setPrice] = useState('');
     const [offerPrice, setOfferPrice] = useState('');
 
-    const { axios } = useAppContext();
+    const { axios,fetchProducts } = useAppContext();
 
     const onSubmitHandler = async (e) => {
         try{
             e.preventDefault();
+            setLoading(true)
             const productData = {
                 name,
                 description: description.split('/n'),
@@ -32,6 +34,7 @@ const AddProduct = () => {
             const { data } = await axios.post('/api/product/add', formData);
             if(data.success){
                 toast.success(data.message);
+                await fetchProducts()
                 setName('');
                 setDescription('');
                 setCategory('');
@@ -45,6 +48,9 @@ const AddProduct = () => {
         }
         catch(error){
             toast.error(error.message);
+        }
+        finally{
+            setLoading(false)
         }
     }
 
@@ -100,7 +106,8 @@ const AddProduct = () => {
                              id="offer-price" type="number" placeholder="0" className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40" required />
                     </div>
                 </div>
-                <button className="px-8 py-2.5 bg-primary-dull text-white font-medium rounded cursor-pointer">ADD</button>
+                <button type="submit" 
+    disabled={loading} className="px-8 py-2.5 bg-primary-dull text-white font-medium rounded cursor-pointer">{loading ? "Adding..." : "ADD"}</button>
             </form>
         </div>
     );
