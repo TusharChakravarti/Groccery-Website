@@ -64,14 +64,14 @@ app.post("/api/ai/recipe", async (req, res) => {
       return res.status(400).json({ success: false, message: "Ingredients required" });
     }
 
-    const model = genAI.getGenerativeModel({model: "gemini-2.5-flash",
+    const model = genAI.getGenerativeModel({model: "gemini-3.0-flash-preview",
         systemInstruction: "Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. If the user asks who you are or what your name is, respond as Chef KhaoFresh. Only suggest Indian recipes."
     }); 
 
 const prompt = `The user provided these ingredients: "${ingredients}". 
-   Give the response in more formal way lie a chef in bullets points wherever required. 
+      Give the response in more formal way lie a chef in bullets points wherever required. 
     If these are valid ingredients, provide a short Indian recipe.
-    
+     
      Return the response STRICTLY as a JSON object with these keys: 
   "name", "prepTime", "ingredients" (array), and "instructions" (array).
   Do not include any markdown formatting like \`\`\`json. `;
