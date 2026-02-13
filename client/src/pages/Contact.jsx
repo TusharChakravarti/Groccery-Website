@@ -3,12 +3,18 @@ import { assets } from '../assets/assets'
 
 const Contact = () => {
   return (
-    <div className='mt-16 flex flex-col'>
+    <div className='mt-16 flex flex-col '>
       
-      <div className='flex flex-col  w-full mb-10'>
+      
+      <div className='flex flex-col items-end w-max mb-10'>
         <p className='text-2xl font-medium uppercase'>Contact Us</p>
-       <div class="w-16 h-0.5 bg-primary-dull rounded-full"></div>
+    
+        <div className="w-16 h-0.5 bg-primary-dull rounded-full"></div>
       </div>
+
+
+
+
 
       <div className="flex flex-col justify-center md:flex-row gap-10 mb-28">
         
@@ -21,11 +27,23 @@ const Contact = () => {
         <div className="flex flex-col justify-center items-start gap-6">
           <p className="font-semibold text-xl text-gray-600">Our Store</p>
           <p className="text-gray-500">
-            123 Fresh Market Lane <br /> 
-            Green Valley, Delhi, India
+
+            KhaoFresh HQ
+             <br /> 
+            Shop No. 12, Sunshine Complex
+             <br /> 
+            Near Traffic Park, Dharampeth
+             <br /> 
+            Nagpur, Maharashtra - 440010
+             <br /> 
+            India
+
+
+           
+            
           </p>
           <p className="text-gray-500">
-            Tel: +91-987-654-3210 <br /> 
+            Phone: +918329007068 <br /> 
             Email: support@khaofresh.com
           </p>
 
@@ -40,4 +58,3 @@ const Contact = () => {
 }
 
 export default Contact
-
