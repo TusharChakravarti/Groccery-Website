@@ -82,7 +82,10 @@ app.post("/api/ai/recipe", async (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`PORT connected on ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`PORT connected on ${port}`);
+// });
+
+export default app;
+
 
