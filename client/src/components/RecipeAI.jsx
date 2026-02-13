@@ -29,7 +29,8 @@ const RecipeAI = () => {
   };
 
   return (
-    <div className="p-6 border rounded-lg shadow-md bg-green-50 mt-10">
+   <div className="p-6 border rounded-lg shadow-md bg-green-50 mt-10" style={{ fontFamily: "Outfit, sans-serif" }}>
+
       <h2 className="text-2xl font-bold text-primary mb-4">🧑‍🍳 Chef KhaoFresh</h2>
       <p className="mb-2 text-gray-600">Enter ingredients you have (e.g., Potato, Spinach):</p>
       
