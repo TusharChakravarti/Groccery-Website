@@ -54,7 +54,21 @@ const RecipeAI = () => {
         <div className="mt-4 p-4 bg-white rounded border">
           <h3 className="font-bold mb-2">Suggested Recipe:</h3>
          
-          <p className="whitespace-pre-line text-gray-700">{recipe}</p>
+{recipe && (
+  <div className="mt-4 p-4 bg-white rounded border">
+    <h3 className="font-bold mb-2">Suggested Recipe:</h3>
+
+    <p className="text-lg font-semibold text-green-700">{recipe.name}</p>
+    <p className="text-sm text-gray-500 mb-2">⏱ Prep Time: {recipe.prepTime}</p>
+
+    <h4 className="font-semibold mt-3">Ingredients:</h4>
+    <p className="whitespace-pre-line text-gray-700">{recipe.ingredients}</p>
+
+    <h4 className="font-semibold mt-3">Instructions:</h4>
+    <p className="whitespace-pre-line text-gray-700">{recipe.instructions}</p>
+  </div>
+)}
+
         </div>
       )}
     </div>
