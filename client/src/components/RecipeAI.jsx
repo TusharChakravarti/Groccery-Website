@@ -11,9 +11,9 @@ const RecipeAI = () => {
     try {
     
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const {data} = axios.post(`${backendUrl}/api/user/login`, data);
+      const request = axios.post(`${backendUrl}/api/user/login`, data);
 
-      setRecipe(data.recipe);
+      setRecipe(request.data.recipe);
     } catch (error) {
       console.error(error);
     } finally {
