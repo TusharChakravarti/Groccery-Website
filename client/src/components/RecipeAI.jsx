@@ -51,7 +51,7 @@ const RecipeAI = () => {
         </button>
       </div>
 
-   {recipe && (
+   {recipe && ( 
   <div className="mt-4 p-4 bg-white rounded border">
   
 
