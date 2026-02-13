@@ -19,7 +19,6 @@ const RecipeAI = () => {
 
     setRecipe(data.recipe);
 
-      setRecipe(request.data.recipe);
     } catch (error) {
         
         

@@ -1,5 +1,5 @@
 
-import 'dotenv/config'; 
+ import 'dotenv/config'; 
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import cors from 'cors';
@@ -69,9 +69,10 @@ app.post("/api/ai/recipe", async (req, res) => {
     const prompt = `I have these ingredients: ${ingredients}. Suggest one simple Indian recipe I can make. Keep it short.`;
 
     const result = await model.generateContent(prompt);
-
+   console.log(result.response.text());
     res.json({
       success: true,
+      
       recipe: result.response.text(),
     });
   } catch (error) {
