@@ -32,7 +32,10 @@ app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
 // Middleware Configuration
 
-
+app.use(cors({
+  origin: "https://khaofresh-eta.vercel.app",
+  credentials: true
+}));
 
 app.use(express.json()); 
 app.use(cookieParser());
