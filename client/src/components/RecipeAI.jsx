@@ -90,7 +90,7 @@ const RecipeAI = () => {
       {/* 3. CONVERSATIONAL SIDEBAR */}
       <div 
         className={`fixed top-0 right-0 h-full bg-white z-50 shadow-2xl transition-all duration-300 flex flex-col ${
-          isOpen ? 'translate-x-0 w-full md:w-[400px] lg:w-[25%]' : 'translate-x-full w-0'
+          isOpen ? 'translate-x-0 w-full md:w-[400px] lg:w-[30%]' : 'translate-x-full w-0'
         }`}
         style={{ fontFamily: "Outfit, sans-serif" }}
       >
