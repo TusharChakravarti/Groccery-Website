@@ -69,11 +69,14 @@ app.post("/api/ai/recipe", async (req, res) => {
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: `Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. 
-      
-      BEHAVIOR RULES:
-      1. If the user provides ingredients, return a recipe in STRICT JSON format with keys: "name", "prepTime", "ingredients", "instructions".
-      2. If the user asks a follow-up question about a recipe, do NOT use JSON. Respond conversationally as a chef.
-      3. Always keep the tone helpful and Indian-cuisine focused.`
+      CRITICAL RULE:
+     - If you are providing a recipe, you MUST return ONLY a JSON object. 
+  - Do NOT include any intro text like "Acha-ji" or "Here is your recipe" inside the same message as a recipe.
+  - Use these keys: "name", "prepTime", "ingredients", "instructions".
+  - For ingredients, start each with '•' and put on a new line.
+  - For instructions, number them and put double new lines between steps.
+  
+  - If the user is just chatting or asking a follow-up question, respond conversationally WITHOUT JSON.`
     }); 
 
     // Initialize the chat with the history received from the frontend

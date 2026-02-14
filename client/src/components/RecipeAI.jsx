@@ -20,19 +20,37 @@ const RecipeAI = () => {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
      
       const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
-        message: input, 
-        history: messages.map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
+       message: currentInput, 
+    history: messages.map(m => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
         }))
       });
+      let rawContent = data.recipe;
+  let parsedRecipe = null;
+  let isRecipe = false;
+
+  if (typeof rawContent === 'string') {
+    try {
+   
+      const cleanJson = rawContent.replace(/```json|```/g, "").trim();
+      parsedRecipe = JSON.parse(cleanJson);
+      isRecipe = true;
+    } catch (e) {
+      isRecipe = false;
+    }
+  } else if (typeof rawContent === 'object') {
+    parsedRecipe = rawContent;
+    isRecipe = true;
+  }
 
       setMessages(prev => [...prev, { 
         role: "model", 
-        text: data.recipe, 
-        isRecipe: typeof data.recipe === 'object' 
+        text: isRecipe ? parsedRecipe : rawContent,
+        isRecipe:  isRecipe
       }]);
-    } catch (error) {
+    } 
+    catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
@@ -100,26 +118,43 @@ const RecipeAI = () => {
                   ? 'bg-green-600 text-white rounded-tr-none' 
                   : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none'
               }`}>
-                {msg.isRecipe ? (
-                  /* Render Structured Recipe */
-                  <div className="animate-fadeIn">
-                    <h2 className="text-lg font-bold text-gray-900 mb-2">{msg.text.name}</h2>
-                    <div className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded mb-3 inline-block">
-                      ⏱ {msg.text.prepTime}
-                    </div>
-                    <div className="mb-3">
-                      <p className="font-bold text-green-700 text-xs uppercase mb-1">Ingredients</p>
-                      <p className="whitespace-pre-line text-xs">{msg.text.ingredients}</p>
-                    </div>
-                    <div>
-                      <p className="font-bold text-green-700 text-xs uppercase mb-1">Steps</p>
-                      <p className="whitespace-pre-line text-xs">{msg.text.instructions}</p>
-                    </div>
-                  </div>
-                ) : (
-                  /* Render Conversational Text */
-                  <div className="whitespace-pre-line">{msg.text}</div>
-                )}
+               {msg.isRecipe ? (
+  <div className="animate-fadeIn">
+    {/* This is the "Good UI" you want back */}
+    <h2 className="text-xl font-bold text-gray-900 leading-tight mb-2">
+      {msg.text.name}
+    </h2>
+    
+    <div className="bg-orange-50 p-2 rounded-lg mb-4 flex items-center">
+      <span className="text-xs font-bold text-orange-700 uppercase">
+        ⏱ {msg.text.prepTime}
+      </span>
+    </div>
+
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-[10px] font-black text-green-700 uppercase tracking-widest mb-2">Ingredients</h3>
+        <div className="whitespace-pre-line text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border-l-4 border-green-500">
+          {/* Handles the • bullet points effectively */}
+          {Array.isArray(msg.text.ingredients) 
+            ? msg.text.ingredients.map(i => `• ${i}`).join('\n') 
+            : msg.text.ingredients}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-[10px] font-black text-green-700 uppercase tracking-widest mb-2">Instructions</h3>
+        <div className="whitespace-pre-line text-sm text-gray-600 leading-relaxed">
+           {Array.isArray(msg.text.instructions) 
+            ? msg.text.instructions.map((step, i) => `${i + 1}. ${step}`).join('\n\n') 
+            : msg.text.instructions}
+        </div>
+      </div>
+    </div>
+  </div>
+) : (
+  <div className="whitespace-pre-line">{msg.text}</div>
+)}
               </div>
             </div>
           ))}
