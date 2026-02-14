@@ -189,7 +189,7 @@ const RecipeAI = () => {
         <h3 className="text-[10px] font-black text-green-700 uppercase tracking-widest mb-2">Instructions</h3>
         <div className="whitespace-pre-line text-sm text-gray-600 leading-relaxed">
            {Array.isArray(msg.text.instructions) 
-            ? msg.text.instructions.map((step, i) => `${step}`).join('\n') 
+            ? msg.text.instructions.map((step, i) => `${step}`).join('\n\n') 
             : msg.text.instructions}
         </div>
       </div>
