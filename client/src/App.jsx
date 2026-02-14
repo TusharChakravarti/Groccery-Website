@@ -18,6 +18,7 @@ import ProductList from "./pages/seller/ProductList.jsx"
 import Orders from "./pages/seller/Orders.jsx"
 import Loading from "./components/Loading.jsx"
 import Contact from './pages/Contact';
+import RecipeAI from "./components/RecipeAI.jsx";
 
 function App() {
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -32,6 +33,7 @@ function App() {
         <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
           <Routes>
             <Route path="/" element={<Home/>} />
+            
             <Route path="/products" element={<AllProducts/>} />
             <Route path="/products/:category" element={<ProductCategory/>} />
             <Route path="/products/:category/:id" element={<ProductDetails/>} />
@@ -43,10 +45,11 @@ function App() {
               <Route index element={isSeller ? <AddProduct /> : null} />
               <Route path="/seller/product-list" element={<ProductList />} />
               <Route path="/seller/orders" element={<Orders />} />
-
+             
             </Route>
             <Route path='/contact' element={<Contact />} />
           </Routes>
+          <RecipeAI />
         </div>
         {!isSellerPath && <Footer />}
       </div>
