@@ -58,44 +58,49 @@ app.use('/api/order', orderRouter);
 
 app.post("/api/ai/recipe", async (req, res) => {
   try {
-    const { ingredients } = req.body;
+    // We now accept 'message' (the new text) and 'history' (past messages)
+    const { message, history } = req.body; 
 
-    if (!ingredients) {
-      return res.status(400).json({ success: false, message: "Ingredients required" });
+    if (!message) {
+      return res.status(400).json({ success: false, message: "Message is required" });
     }
 
-    const model = genAI.getGenerativeModel({model: "gemini-2.5-flash",
-        systemInstruction: "Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. If the user asks who you are or what your name is, respond as Chef KhaoFresh. Only suggest Indian recipes."
+    // Use gemini-1.5-flash as it is the stable production model
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+      systemInstruction: `Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. 
+      
+      BEHAVIOR RULES:
+      1. If the user provides ingredients, return a recipe in STRICT JSON format with keys: "name", "prepTime", "ingredients", "instructions".
+      2. If the user asks a follow-up question about a recipe, do NOT use JSON. Respond conversationally as a chef.
+      3. Always keep the tone helpful and Indian-cuisine focused.`
     }); 
 
-const prompt = `Based on the ingredients: '${ingredients}', provide a professional Indian recipe. 
+    // Initialize the chat with the history received from the frontend
+    const chat = model.startChat({
+      history: history || [],
+    });
 
-You MUST return the response in STRICT JSON format. 
-Use the exact keys: "name", "prepTime", "ingredients", "instructions".
-
-Formatting Requirements for the JSON values:
-1. 'ingredients': Start each item with a '•' bullet point. Put each ingredient on a NEW LINE.
-2. 'instructions': Number each step (1., 2.). Put TWO new line characters (\\n\\n) between every step.
-3. No markdown symbols like # or ***.
-
-Example format:
-{
-  "name": "PANEER BUTTER MASALA",
-  "prepTime": "25 mins",
-  "ingredients": "• 200g Paneer [Cottage Cheese]\\n• 2 Tomatoes [Tamatar]",
-  "instructions": "1. Sauté the onions until golden.\\n\\n2. Add the tomato puree and spices."
-}`;
-
-    const result = await model.generateContent(prompt);
+    const result = await chat.sendMessage(message);
     const responseText = result.response.text();
-    const cleanJson = responseText.replace(/```json|```/g, "").trim();
-    const recipeData = JSON.parse(cleanJson);
-   console.log("Recipe Generated:", recipeData);
+
+    // Logic to determine if we should parse as JSON or send as plain text
+    let finalData;
+    const cleanText = responseText.replace(/```json|```/g, "").trim();
+
+    try {
+      // Try to parse. If it's a recipe, it will succeed.
+      finalData = JSON.parse(cleanText);
+    } catch (e) {
+     
+      finalData = cleanText;
+    }
+
     res.json({
       success: true,
-      
-      recipe: recipeData,
+      recipe: finalData, 
     });
+
   } catch (error) {
     console.log("Gemini Error:", error.message);
     res.status(500).json({ success: false, message: error.message });
