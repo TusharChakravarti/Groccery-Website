@@ -68,12 +68,21 @@ app.post("/api/ai/recipe", async (req, res) => {
         systemInstruction: "Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. If the user asks who you are or what your name is, respond as Chef KhaoFresh. Only suggest Indian recipes."
     }); 
 
-const prompt = `The user provided these ingredients: "${ingredients}". 
-  Give the response in more formal way lie a chef in bullets points wherever required. 
-    If these are valid ingredients, provide a short Indian recipe.
-     Return the response STRICTLY as a JSON object with these keys: 
-  "name", "prepTime", "ingredients" (array), and "instructions" (array).
-  Do not include any markdown formatting like \`\`\`json. `;
+const prompt = `Based on the ingredients: '${ingredients}', provide a professional Indian recipe.
+
+Follow these formatting rules strictly to ensure a clean visual layout:
+
+Recipe Title: Write the name in ALL CAPITAL LETTERS and Bold.
+
+Section Headers: Use BOLD CAPS for 'INGREDIENTS' and 'COOKING DIRECTIONS'. Do not use any symbols like # or * for headers.
+
+Ingredients List: Use a simple bullet point (•) for each item. Include the Hindi name in brackets (e.g., Cumin Seeds [Jeera]).
+
+Instructions: Use a numbered list (1., 2., 3.). Put a full empty line between each step so it doesn’t look like a wall of text.
+
+Chef’s Note: Add a 'CHEF'S PRO-TIP' at the end in Bold.
+
+No Markdown Symbols: Strictly avoid using '#' or '###'. Use only Bold text and standard lists. No json please `;
 
     const result = await model.generateContent(prompt);
     const recipeData = JSON.parse(result.response.text());

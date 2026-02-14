@@ -50,19 +50,43 @@ const RecipeAI = () => {
           {loading ? "Cooking..." : "Ask AI"}
         </button>
       </div>
+{recipe && (
+  <div className="mt-6 p-6 bg-white rounded-xl border border-gray-200 shadow-sm max-w-2xl mx-auto">
+    
+   
+    <h2 className="text-2xl font-bold text-green-800 uppercase tracking-wide border-b-2 border-green-100 pb-2">
+      {recipe.name}
+    </h2>
 
-   {recipe && ( 
-  <div className="mt-4 p-4 bg-white rounded border">
-  
 
-    <p className="text-lg font-semibold text-green-700">{recipe.name}</p>
-    <p className="text-sm text-gray-500 mb-2">⏱ Prep Time: {recipe.prepTime}</p>
+    <div className="mt-3 inline-flex items-center px-3 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold uppercase tracking-tighter">
+      ⏱ Prep Time: {recipe.prepTime}
+    </div>
 
-    <h4 className="font-semibold mt-3">Ingredients:</h4>
-    <p className="whitespace-pre-line text-gray-700">{recipe.ingredients}</p>
+ 
+    <div className="mt-6">
+      <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-tight">
+        Ingredients
+      </h3>
+      <div className="whitespace-pre-line text-gray-700 leading-relaxed pl-1 border-l-4 border-green-500 bg-gray-50 p-4 rounded-r-lg">
+        {recipe.ingredients}
+      </div>
+    </div>
 
-    <h4 className="font-semibold mt-3">Instructions:</h4>
-    <p className="whitespace-pre-line text-gray-700">{recipe.instructions}</p>
+
+    <div className="mt-6">
+      <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-tight">
+        Cooking Instructions
+      </h3>
+      <div className="whitespace-pre-line text-gray-700 leading-loose space-y-4">
+        {recipe.instructions}
+      </div>
+    </div>
+
+   
+    <div className="mt-8 pt-4 border-t border-gray-100 text-center text-gray-400 italic text-sm">
+      Authentic Indian Flavors • Prepared by Chef KhaoFresh.
+    </div>
   </div>
 )}
     </div>
