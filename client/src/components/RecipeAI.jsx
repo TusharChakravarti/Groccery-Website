@@ -120,14 +120,14 @@ const RecipeAI = () => {
               }`}>
                {msg.isRecipe ? (
   <div className="animate-fadeIn">
-    {/* This is the "Good UI" you want back */}
+   
     <h2 className="text-xl font-bold text-gray-900 leading-tight mb-2">
       {msg.text.name}
     </h2>
     
     <div className="bg-orange-50 p-2 rounded-lg mb-4 flex items-center">
       <span className="text-xs font-bold text-orange-700 uppercase">
-        ⏱ {msg.text.prepTime}
+        ⏱ PREP TIME : {msg.text.prepTime}
       </span>
     </div>
 
@@ -135,9 +135,9 @@ const RecipeAI = () => {
       <div>
         <h3 className="text-[10px] font-black text-green-700 uppercase tracking-widest mb-2">Ingredients</h3>
         <div className="whitespace-pre-line text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border-l-4 border-green-500">
-          {/* Handles the • bullet points effectively */}
+         
           {Array.isArray(msg.text.ingredients) 
-            ? msg.text.ingredients.map(i => `• ${i}`).join('\n') 
+            ? msg.text.ingredients.map(i => `${i}`).join('\n') 
             : msg.text.ingredients}
         </div>
       </div>
@@ -146,7 +146,7 @@ const RecipeAI = () => {
         <h3 className="text-[10px] font-black text-green-700 uppercase tracking-widest mb-2">Instructions</h3>
         <div className="whitespace-pre-line text-sm text-gray-600 leading-relaxed">
            {Array.isArray(msg.text.instructions) 
-            ? msg.text.instructions.map((step, i) => `${i + 1}. ${step}`).join('\n\n') 
+            ? msg.text.instructions.map((step, i) => `${step}`).join('\n') 
             : msg.text.instructions}
         </div>
       </div>
