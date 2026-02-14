@@ -85,8 +85,8 @@ Chef’s Note: Add a 'CHEF'S PRO-TIP' at the end in Bold.
 No Markdown Symbols: Strictly avoid using '#' or '###'. Use only Bold text and standard lists. No json please `;
 
     const result = await model.generateContent(prompt);
-    const recipeData = JSON.parse(result.response.text());
-   console.log(result.response.text());
+    const recipeData = result.response.text();
+   console.log("Recipe Generated:", recipeData);
     res.json({
       success: true,
       
