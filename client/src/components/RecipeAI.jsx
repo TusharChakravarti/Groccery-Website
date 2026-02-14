@@ -15,9 +15,7 @@ const RecipeAI = () => {
   const handleSend = async () => {
   if (!input.trim()) return;
 
-  // 1. Capture the input and the updated message list locally.
-  // We do this because setMessages is asynchronous and 'messages' 
-  // won't have the new user message yet when we call the API.
+ 
   const currentInput = input;
   const userMsg = { role: "user", text: currentInput };
   const updatedMessages = [...messages, userMsg];
