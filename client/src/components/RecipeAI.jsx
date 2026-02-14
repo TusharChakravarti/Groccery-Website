@@ -25,10 +25,12 @@ const RecipeAI = () => {
      
       const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
        message: input, 
-    history: messages.map(m => ({
+  history: messages
+    .filter((m, index) => !(index === 0 && m.role === 'model')) // Skip the first message if it's from the model
+    .map(m => ({
       role: m.role === 'user' ? 'user' : 'model',
       parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
-        }))
+    }))
       });
       let rawContent = data.recipe;
   let parsedRecipe = null;
