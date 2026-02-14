@@ -12,56 +12,65 @@ const RecipeAI = () => {
   const [isOpen, setIsOpen] = useState(false);
   const scrollRef = useRef(null);
 
-   const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+  if (!input.trim()) return;
 
-    const userMsg = { role: "user", text: input };
-    setMessages(prev => [...prev, userMsg]);
-    setInput('');
-    setLoading(true);
+  // 1. Capture the input and the updated message list locally.
+  // We do this because setMessages is asynchronous and 'messages' 
+  // won't have the new user message yet when we call the API.
+  const currentInput = input;
+  const userMsg = { role: "user", text: currentInput };
+  const updatedMessages = [...messages, userMsg];
 
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-     
-      const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
-       message: input, 
-  history: messages
-    .filter((m, index) => !(index === 0 && m.role === 'model')) // Skip the first message if it's from the model
-    .map(m => ({
+  setMessages(updatedMessages);
+  setInput('');
+  setLoading(true);
+
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  
+    const firstUserIndex = updatedMessages.findIndex(m => m.role === 'user');
+
+   
+    const apiHistory = updatedMessages.slice(firstUserIndex).map(m => ({
       role: m.role === 'user' ? 'user' : 'model',
       parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
-    }))
-      });
-      let rawContent = data.recipe;
-  let parsedRecipe = null;
-  let isRecipe = false;
+    }));
 
-  if (typeof rawContent === 'string') {
-    try {
-   
-      const cleanJson = rawContent.replace(/```json|```/g, "").trim();
-      parsedRecipe = JSON.parse(cleanJson);
+    const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
+      message: currentInput, 
+      history: apiHistory
+    });
+
+    let rawContent = data.recipe;
+    let parsedRecipe = null;
+    let isRecipe = false;
+
+    if (typeof rawContent === 'string') {
+      try {
+        const cleanJson = rawContent.replace(/```json|```/g, "").trim();
+        parsedRecipe = JSON.parse(cleanJson);
+        isRecipe = true;
+      } catch (e) {
+        isRecipe = false;
+      }
+    } else if (typeof rawContent === 'object' && rawContent !== null) {
+      parsedRecipe = rawContent;
       isRecipe = true;
-    } catch (e) {
-      isRecipe = false;
     }
-  } else if (typeof rawContent === 'object') {
-    parsedRecipe = rawContent;
-    isRecipe = true;
-  }
 
-      setMessages(prev => [...prev, { 
-        role: "model", 
-        text: isRecipe ? parsedRecipe : rawContent,
-        isRecipe:  isRecipe
-      }]);
-    } 
-    catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setMessages(prev => [...prev, { 
+      role: "model", 
+      text: isRecipe ? parsedRecipe : rawContent,
+      isRecipe: isRecipe
+    }]);
+  } catch (error) {
+    console.error("Gemini Error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Auto-scroll to the latest message
   useEffect(() => {
