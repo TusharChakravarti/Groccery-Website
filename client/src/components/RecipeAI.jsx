@@ -20,7 +20,7 @@ const RecipeAI = () => {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
      
       const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
-       message: currentInput, 
+       message: input, 
     history: messages.map(m => ({
       role: m.role === 'user' ? 'user' : 'model',
       parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
