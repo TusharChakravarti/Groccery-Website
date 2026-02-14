@@ -68,24 +68,28 @@ app.post("/api/ai/recipe", async (req, res) => {
         systemInstruction: "Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. If the user asks who you are or what your name is, respond as Chef KhaoFresh. Only suggest Indian recipes."
     }); 
 
-const prompt = `Based on the ingredients: '${ingredients}', provide a professional Indian recipe.
+const prompt = `Based on the ingredients: '${ingredients}', provide a professional Indian recipe. 
 
-Follow these formatting rules strictly to ensure a clean visual layout:
+You MUST return the response in STRICT JSON format. 
+Use the exact keys: "name", "prepTime", "ingredients", "instructions".
 
-Recipe Title: Write the name in ALL CAPITAL LETTERS and Bold.
+Formatting Requirements for the JSON values:
+1. 'ingredients': Start each item with a '•' bullet point. Put each ingredient on a NEW LINE.
+2. 'instructions': Number each step (1., 2.). Put TWO new line characters (\\n\\n) between every step.
+3. No markdown symbols like # or ***.
 
-Section Headers: Use BOLD CAPS for 'INGREDIENTS' and 'COOKING DIRECTIONS'. Do not use any symbols like # or * for headers.
-
-Ingredients List: Use a simple bullet point (•) for each item. Include the Hindi name in brackets (e.g., Cumin Seeds [Jeera]).
-
-Instructions: Use a numbered list (1., 2., 3.). Put a full empty line between each step so it doesn’t look like a wall of text.
-
-Chef’s Note: Add a 'CHEF'S PRO-TIP' at the end in Bold.
-
-No Markdown Symbols: Strictly avoid using '#' or '###'. Use only Bold text and standard lists. No json please `;
+Example format:
+{
+  "name": "PANEER BUTTER MASALA",
+  "prepTime": "25 mins",
+  "ingredients": "• 200g Paneer [Cottage Cheese]\\n• 2 Tomatoes [Tamatar]",
+  "instructions": "1. Sauté the onions until golden.\\n\\n2. Add the tomato puree and spices."
+}`;
 
     const result = await model.generateContent(prompt);
-    const recipeData = result.response.text();
+    const responseText = result.response.text();
+    const cleanJson = responseText.replace(/```json|```/g, "").trim();
+    const recipeData = JSON.parse(cleanJson);
    console.log("Recipe Generated:", recipeData);
     res.json({
       success: true,
