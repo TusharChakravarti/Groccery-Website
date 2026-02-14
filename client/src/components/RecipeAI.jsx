@@ -3,7 +3,11 @@ import axios from 'axios';
 
 const RecipeAI = () => {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([]); // Array of {role: 'user' | 'model', text: string, isRecipe: boolean}
+  const [messages, setMessages] = useState([{ 
+    role: 'model', 
+    text: "Namaste! 🧑‍🍳 I'm Chef KhaoFresh, your personal Indian culinary guide. Tell me what ingredients you have, and I'll help you whip up something delicious!",
+    isRecipe: false 
+  }]); 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const scrollRef = useRef(null);
@@ -65,22 +69,52 @@ const RecipeAI = () => {
   }, [messages, loading]);
 
 
+  const [showBubble, setShowBubble] = useState(true);
+
 
   return (
     <>
-      {/* 1. FLOATING ACTION BUTTON */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-green-600 text-white rounded-full shadow-2xl hover:bg-green-700 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 64 64" fill="none">
-  <circle cx="32" cy="28" r="12" fill="#F2C9A0"/>
-  <path d="M20 22c-3 0-6-2.5-6-6s3-6 6-6c1-3 4-5 7-5 2 0 4 1 5 2.5C33 6 35 5 37 5c3 0 6 2 7 5 3 0 6 2.5 6 6s-3 6-6 6H20z" fill="white" stroke="#ddd" strokeWidth="2"/>
-  <rect x="20" y="22" width="24" height="8" rx="2" fill="white" stroke="#ddd" strokeWidth="2"/>
-  <path d="M18 54c0-8 6-14 14-14h0c8 0 14 6 14 14v4H18v-4z" fill="#4F46E5"/>
-  <path d="M26 40l6 6 6-6" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
-      </button>
+     
+<div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+  
+ 
+  {showBubble && !isOpen && (
+    <div className="bg-white border border-green-100 text-gray-800 px-4 py-2 rounded-2xl shadow-xl text-sm font-medium animate-bounce-slow relative">
+      <div className="flex items-center gap-2 whitespace-nowrap">
+        <span>Namaste! Ask Chef KhaoFresh?</span>
+        <button 
+       
+          onClick={(e) => { 
+            e.stopPropagation();
+            setShowBubble(false);
+           }}
+          className="text-gray-400 hover:text-gray-600 text-xl "
+        >
+          &times;
+        </button>
+      </div>
+      {/* Small Triangle for the bubble */}
+      <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-l-[8px] border-l-white border-b-[6px] border-b-transparent"></div>
+    </div>
+  )}
+
+  
+  <button
+    onClick={() => {
+      setIsOpen(!isOpen)
+      setShowBubble(false);
+    }}
+    className="p-4 bg-green-600 text-white rounded-full shadow-2xl hover:bg-green-700 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center group"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="28" r="12" fill="#F2C9A0"/>
+      <path d="M20 22c-3 0-6-2.5-6-6s3-6 6-6c1-3 4-5 7-5 2 0 4 1 5 2.5C33 6 35 5 37 5c3 0 6 2 7 5 3 0 6 2.5 6 6s-3 6-6 6H20z" fill="white" stroke="#ddd" strokeWidth="2"/>
+      <rect x="20" y="22" width="24" height="8" rx="2" fill="white" stroke="#ddd" strokeWidth="2"/>
+      <path d="M18 54c0-8 6-14 14-14h0c8 0 14 6 14 14v4H18v-4z" fill="#4F46E5"/>
+      <path d="M26 40l6 6 6-6" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </button>
+</div>
 
       {/* 2. OVERLAY */}
       {isOpen && (
