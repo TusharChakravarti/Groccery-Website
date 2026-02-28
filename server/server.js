@@ -59,7 +59,7 @@ app.use('/api/order', orderRouter);
 app.post("/api/ai/recipe", async (req, res) => {
   try {
     // We now accept 'message' (the new text) and 'history' (past messages)
-    const { message, history } = req.body; 
+    const { message, history, image } = req.body; 
 
     if (!message) {
       return res.status(400).json({ success: false, message: "Message is required" });
@@ -84,6 +84,22 @@ app.post("/api/ai/recipe", async (req, res) => {
       history: history || [],
     });
 
+    let payload;
+    if (image && image.data && image.mimeType) {
+
+      payload = [
+        message, 
+        {
+          inlineData: {
+            data: image.data, 
+            mimeType: image.mimeType
+          }
+        }
+      ];
+    } else {
+     
+      payload = message;
+    }
     const result = await chat.sendMessage(message);
     const responseText = result.response.text();
 

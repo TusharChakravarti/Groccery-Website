@@ -12,21 +12,43 @@ const RecipeAI = () => {
   const [isOpen, setIsOpen] = useState(false);
   const scrollRef = useRef(null);
 
+
+const [selectedImage, setSelectedImage] = useState(null); // To store the file for preview
+const fileInputRef = useRef(null); // To trigger the hidden file input
+
+// Helper to convert file to base64
+const fileToGenerativePart = async (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve({
+      data: reader.result.split(',')[1], // Extract raw base64
+      mimeType: file.type
+    });
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
   const handleSend = async () => {
-  if (!input.trim()) return;
+  if (!input.trim()&& !selectedImage) return;
 
  
   const currentInput = input;
-  const userMsg = { role: "user", text: currentInput };
+  const currentImage = selectedImage;
+  const userMsg = { role: "user", text: currentInput,imagePreview: currentImage ? URL.createObjectURL(currentImage) : null};
   const updatedMessages = [...messages, userMsg];
 
   setMessages(updatedMessages);
   setInput('');
+  setSelectedImage(null);
   setLoading(true);
 
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
+let imagePayload = null;
+    if (currentImage) {
+      imagePayload = await fileToGenerativePart(currentImage);
+    }
   
     const firstUserIndex = updatedMessages.findIndex(m => m.role === 'user');
 
@@ -38,7 +60,8 @@ const RecipeAI = () => {
 
     const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
       message: currentInput, 
-      history: apiHistory
+      history: apiHistory,
+      image: imagePayload
     });
 
     let rawContent = data.recipe;
@@ -85,6 +108,7 @@ const RecipeAI = () => {
     <>
      
 <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+  
   
  
   {showBubble && !isOpen && (
@@ -161,6 +185,13 @@ const RecipeAI = () => {
                   ? 'bg-green-600 text-white rounded-tr-none' 
                   : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none'
               }`}>
+                {msg.imagePreview && (
+          <img 
+            src={msg.imagePreview} 
+            className="w-full max-h-48 object-cover rounded-lg mb-2 border border-black/10" 
+            alt="Uploaded by user" 
+          />
+        )}
                {msg.isRecipe ? (
   <div className="animate-fadeIn">
    
@@ -204,26 +235,84 @@ const RecipeAI = () => {
           {loading && <div className="text-xs text-gray-400 animate-pulse ml-2">Chef is thinking...</div>}
         </div>
 
+
+
+
+
         {/* Input Bar */}
         <div className="p-4 border-t bg-white shrink-0">
+          
           <div className="flex gap-2">
-            <input 
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask Chef KhaoFresh..."
-              className="flex-1 border-2 border-gray-100 p-2 rounded-xl focus:border-green-500 outline-none text-sm"
-            />
-            <button 
-              onClick={handleSend}
-              disabled={loading}
-              className="bg-green-600 text-white p-2 rounded-xl disabled:bg-gray-300"
-            >
-              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-              </svg>
-            </button>
+
+      <div className="flex flex-col border-2 border-gray-200 focus-within:border-green-500 rounded-2xl bg-white w-full max-w-2xl overflow-hidden transition-colors shadow-sm">
+  
+  {/* TOP ROW: Image Preview (Only shows if image exists) */}
+  {selectedImage && (
+    <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+      <div className="relative w-16 h-16 inline-block">
+        <img 
+          src={URL.createObjectURL(selectedImage)} 
+          className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm" 
+          alt="upload preview" 
+        />
+        <button 
+          onClick={() => setSelectedImage(null)}
+          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md transition-colors"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* BOTTOM ROW: Input Controls */}
+  <div className="flex items-center px-2 sm:px-2 py-2">
+    
+    {/* Hidden File Input */}
+    <input 
+      type="file" 
+      accept="image/*" 
+      ref={fileInputRef} 
+      onChange={(e) => setSelectedImage(e.target.files[0])}
+      className="hidden" 
+    />
+    
+    {/* Upload Button */}
+    <button 
+      onClick={() => fileInputRef.current.click()}
+      className="p-2 text-gray-500 hover:text-green-600 transition-colors outline-none flex-shrink-0"
+    >
+      📷
+    </button>
+
+    {/* Vertical Divider */}
+    <div className="h-6 w-[2px] bg-gray-200 mx-2"></div>
+
+    {/* Text Input */}
+    <input 
+      type="text"
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+      placeholder="Ask Chef KhaoFresh..."
+      className="flex-1 min-w-0 p-2 outline-none text-sm bg-transparent"
+    />
+
+    {/* Send Button */}
+    <button 
+      onClick={handleSend}
+      disabled={loading}
+      className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-xl disabled:bg-gray-300 ml-1 sm:ml-2 flex-shrink-0 transition-colors shadow-sm"
+    >
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+      </svg>
+    </button>
+    
+  </div>
+</div>
+              
+           
           </div>
         </div>
       </div>
