@@ -48,7 +48,9 @@ const fileToGenerativePart = async (file) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 let imagePayload = [];
     if (currentImages.length>0) {
-      imagePayload = await fileToGenerativePart(currentImages);
+imagePayload = await Promise.all(
+          currentImages.map(img => fileToGenerativePart(img))
+        );
     }
   
     const firstUserIndex = updatedMessages.findIndex(m => m.role === 'user');
@@ -284,8 +286,10 @@ let imagePayload = [];
       multiple
       ref={fileInputRef} 
 onChange={(e) => {
+  if (!e.target.files || e.target.files.length === 0) return;
                     const files = Array.from(e.target.files).slice(0, 3);
                     setSelectedImages(prev => [...prev, ...files].slice(0, 3));
+                    e.target.value = null;
                   }}
       className="hidden" 
     />
