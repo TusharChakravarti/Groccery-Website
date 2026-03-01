@@ -13,7 +13,7 @@ const RecipeAI = () => {
   const scrollRef = useRef(null);
 
 
-const [selectedImages, setSelectedImages] = useState(null); // To store the file for preview
+const [selectedImages, setSelectedImages] = useState([]); // To store the file for preview
 const fileInputRef = useRef(null); // To trigger the hidden file input
 
 // Helper to convert file to base64
@@ -36,7 +36,7 @@ const fileToGenerativePart = async (file) => {
   const currentInput = input;
   const currentImage = [...selectedImages];
   const finalMessageText = currentInput.trim() || "What can I make with this?";
-  const userMsg = { role: "user", text: currentInput,imagePreview: currentImages.map(img => URL.createObjectURL(img))};
+  const userMsg = { role: "user", text: finalMessageText,imagePreview: currentImages.map(img => URL.createObjectURL(img))};
   const updatedMessages = [...messages, userMsg];
 
   setMessages(updatedMessages);
@@ -47,7 +47,7 @@ const fileToGenerativePart = async (file) => {
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 let imagePayload = [];
-    if (currentImage) {
+    if (currentImages.length>0) {
       imagePayload = await fileToGenerativePart(currentImage);
     }
   
@@ -187,12 +187,17 @@ let imagePayload = [];
                   ? 'bg-green-600 text-white rounded-tr-none' 
                   : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none'
               }`}>
-                {msg.imagePreview && (
-          <img 
-            src={msg.imagePreview} 
-            className="w-full max-h-48 object-cover rounded-lg mb-2 border border-black/10" 
-            alt="Uploaded by user" 
-          />
+                {msg.imagePreview && msg.imagePreviews.length > 0 &&(
+         <div className="flex flex-wrap gap-2 mb-2">
+                    {msg.imagePreviews.map((previewUrl, i) => (
+                      <img 
+                        key={i}
+                        src={previewUrl} 
+                        className="w-full max-w-[48%] h-24 object-cover rounded-lg border border-black/10" 
+                        alt={`Uploaded by user ${i}`} 
+                      />
+                    ))}
+                  </div>
         )}
                {msg.isRecipe ? (
   <div className="animate-fadeIn">
@@ -254,7 +259,7 @@ let imagePayload = [];
      {selectedImages.map((img, index) => (
       <div key={index} className="relative w-16 h-16 flex-shrink-0">
         <img 
-          src={URL.createObjectURL(selectedImages)} 
+          src={URL.createObjectURL(img)} 
           className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm" 
           alt={`preview-${index}`}
         />
@@ -278,7 +283,10 @@ let imagePayload = [];
       accept="image/*" 
       multiple
       ref={fileInputRef} 
-      onChange={(e) => setSelectedImages(e.target.files[0])}
+onChange={(e) => {
+                    const files = Array.from(e.target.files).slice(0, 3);
+                    setSelectedImages(prev => [...prev, ...files].slice(0, 3));
+                  }}
       className="hidden" 
     />
     
