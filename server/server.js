@@ -86,7 +86,7 @@ app.post("/api/ai/recipe", async (req, res) => {
     });
 
     let payload = [];
-    if (images && image.length>0) {
+    if (images && images.length>0) {
 
      images.forEach(img => {
         payload.push({
