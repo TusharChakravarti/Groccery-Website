@@ -13,7 +13,7 @@ const RecipeAI = () => {
   const scrollRef = useRef(null);
 
 
-const [selectedImage, setSelectedImage] = useState(null); // To store the file for preview
+const [selectedImages, setSelectedImages] = useState(null); // To store the file for preview
 const fileInputRef = useRef(null); // To trigger the hidden file input
 
 // Helper to convert file to base64
@@ -30,23 +30,23 @@ const fileToGenerativePart = async (file) => {
 };
 
   const handleSend = async () => {
-  if (!input.trim()&& !selectedImage) return;
+  if (!input.trim()&& !selectedImages) return;
 
  
   const currentInput = input;
-  const currentImage = selectedImage;
+  const currentImage = [...selectedImages];
   const finalMessageText = currentInput.trim() || "What can I make with this?";
-  const userMsg = { role: "user", text: currentInput,imagePreview: currentImage ? URL.createObjectURL(currentImage) : null};
+  const userMsg = { role: "user", text: currentInput,imagePreview: currentImages.map(img => URL.createObjectURL(img))};
   const updatedMessages = [...messages, userMsg];
 
   setMessages(updatedMessages);
   setInput('');
-  setSelectedImage(null);
+  setSelectedImages([]);
   setLoading(true);
 
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-let imagePayload = null;
+let imagePayload = [];
     if (currentImage) {
       imagePayload = await fileToGenerativePart(currentImage);
     }
@@ -63,7 +63,7 @@ let imagePayload = null;
     const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
       message: finalMessageText, 
       history: apiHistory,
-      image: imagePayload
+      images: imagePayload
     });
 
     let rawContent = data.recipe;
@@ -249,21 +249,23 @@ let imagePayload = null;
       <div className="flex flex-col border-2 border-gray-200 focus-within:border-green-500 rounded-2xl bg-white w-full max-w-2xl overflow-hidden transition-colors shadow-sm">
   
   {/* TOP ROW: Image Preview (Only shows if image exists) */}
-  {selectedImage && (
-    <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-      <div className="relative w-16 h-16 inline-block">
+  {selectedImages.length>0 && (
+    <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex gap-2 overflow-x-auto">
+     {selectedImages.map((img, index) => (
+      <div key={index} className="relative w-16 h-16 flex-shrink-0">
         <img 
-          src={URL.createObjectURL(selectedImage)} 
+          src={URL.createObjectURL(selectedImages)} 
           className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm" 
-          alt="upload preview" 
+          alt={`preview-${index}`}
         />
         <button 
-          onClick={() => setSelectedImage(null)}
+          onClick={() => setSelectedImages(prev => prev.filter((_, i) => i !== index))}
           className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md transition-colors"
         >
           &times;
         </button>
       </div>
+     ))}
     </div>
   )}
 
@@ -274,8 +276,9 @@ let imagePayload = null;
     <input 
       type="file" 
       accept="image/*" 
+      multiple
       ref={fileInputRef} 
-      onChange={(e) => setSelectedImage(e.target.files[0])}
+      onChange={(e) => setSelectedImages(e.target.files[0])}
       className="hidden" 
     />
     

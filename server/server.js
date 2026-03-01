@@ -59,7 +59,7 @@ app.use('/api/order', orderRouter);
 app.post("/api/ai/recipe", async (req, res) => {
   try {
 
-    const { message, history, image } = req.body; 
+    const { message, history, images } = req.body; 
 
     if (!message) {
       return res.status(400).json({ success: false, message: "Message is required" });
@@ -85,21 +85,21 @@ app.post("/api/ai/recipe", async (req, res) => {
       history: history || [],
     });
 
-    let payload;
-    if (image && image.data && image.mimeType) {
+    let payload = [];
+    if (images && image.length>0) {
 
-      payload = [
-        
-        {
+     images.forEach(img => {
+        payload.push({
           inlineData: {
-            data: image.data, 
-            mimeType: image.mimeType
+            data: img.data, 
+            mimeType: img.mimeType
           }
-        },message
-      ];
+        });
+      });
+        payload.push(message);
     } else {
-     
-      payload = message;
+   payload = [message];
+      
     }
     const result = await chat.sendMessage(payload);
     const responseText = result.response.text();
