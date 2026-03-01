@@ -31,9 +31,9 @@ const allowedOrigins = ['http://localhost:5173', 'https://khaofresh-eta.vercel.a
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
 // Middleware Configuration
+app.use(express.json({ limit: '50mb' })); 
+//app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-
-app.use(express.json()); 
 app.use(cookieParser());
 app.use((req, res, next) => {
     const origin = req.headers.origin;
@@ -58,14 +58,14 @@ app.use('/api/order', orderRouter);
 
 app.post("/api/ai/recipe", async (req, res) => {
   try {
-    // We now accept 'message' (the new text) and 'history' (past messages)
+
     const { message, history, image } = req.body; 
 
     if (!message) {
       return res.status(400).json({ success: false, message: "Message is required" });
     }
 
-    // Use gemini-1.5-flash as it is the stable production model
+
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: `Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. 
@@ -103,12 +103,12 @@ app.post("/api/ai/recipe", async (req, res) => {
     const result = await chat.sendMessage(message);
     const responseText = result.response.text();
 
-    // Logic to determine if we should parse as JSON or send as plain text
+
     let finalData;
     const cleanText = responseText.replace(/```json|```/g, "").trim();
 
     try {
-      // Try to parse. If it's a recipe, it will succeed.
+
       finalData = JSON.parse(cleanText);
     } catch (e) {
      
