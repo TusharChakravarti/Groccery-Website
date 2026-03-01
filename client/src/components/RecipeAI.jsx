@@ -35,6 +35,7 @@ const fileToGenerativePart = async (file) => {
  
   const currentInput = input;
   const currentImage = selectedImage;
+  const finalMessageText = currentInput.trim() || "What can I make with this?";
   const userMsg = { role: "user", text: currentInput,imagePreview: currentImage ? URL.createObjectURL(currentImage) : null};
   const updatedMessages = [...messages, userMsg];
 
@@ -53,13 +54,14 @@ let imagePayload = null;
     const firstUserIndex = updatedMessages.findIndex(m => m.role === 'user');
 
    
-    const apiHistory = updatedMessages.slice(firstUserIndex).map(m => ({
-      role: m.role === 'user' ? 'user' : 'model',
-      parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
-    }));
-
+   const apiHistory = firstUserIndex !== -1 
+        ? messages.slice(firstUserIndex).map(m => ({
+            role: m.role === 'user' ? 'user' : 'model',
+            parts: [{ text: typeof m.text === 'object' ? JSON.stringify(m.text) : m.text }]
+          }))
+        : [];
     const { data } = await axios.post(`${backendUrl}/api/ai/recipe`, {
-      message: currentInput, 
+      message: finalMessageText, 
       history: apiHistory,
       image: imagePayload
     });
