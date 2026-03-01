@@ -48,7 +48,7 @@ const fileToGenerativePart = async (file) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 let imagePayload = [];
     if (currentImages.length>0) {
-      imagePayload = await fileToGenerativePart(currentImage);
+      imagePayload = await fileToGenerativePart(currentImages);
     }
   
     const firstUserIndex = updatedMessages.findIndex(m => m.role === 'user');
