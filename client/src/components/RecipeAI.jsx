@@ -36,7 +36,7 @@ const fileToGenerativePart = async (file) => {
   const currentInput = input;
   const currentImages = [...selectedImages];
   const finalMessageText = currentInput.trim() || "What can I make with this?";
-  const userMsg = { role: "user", text: finalMessageText,imagePreview: currentImages.map(img => URL.createObjectURL(img))};
+  const userMsg = { role: "user", text: finalMessageText,imagePreviews: currentImages.map(img => URL.createObjectURL(img))};
   const updatedMessages = [...messages, userMsg];
 
   setMessages(updatedMessages);
@@ -189,7 +189,7 @@ imagePayload = await Promise.all(
                   ? 'bg-green-600 text-white rounded-tr-none' 
                   : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none'
               }`}>
-                {msg.imagePreview && msg.imagePreviews.length > 0 &&(
+                {msg.imagePreviews && msg.imagePreviews.length > 0 &&(
          <div className="flex flex-wrap gap-2 mb-2">
                     {msg.imagePreviews.map((previewUrl, i) => (
                       <img 
