@@ -88,13 +88,13 @@ app.post("/api/ai/recipe", async (req, res) => {
     if (image && image.data && image.mimeType) {
 
       payload = [
-        message, 
+        
         {
           inlineData: {
             data: image.data, 
             mimeType: image.mimeType
           }
-        }
+        },message
       ];
     } else {
      
