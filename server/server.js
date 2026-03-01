@@ -70,6 +70,7 @@ app.post("/api/ai/recipe", async (req, res) => {
       model: "gemini-2.5-flash",
       systemInstruction: `Your name is Chef KhaoFresh. You are a cheerful Indian culinary expert. 
       CRITICAL RULE:
+      - Analyze any images provided. If it is a packaged food like Maggi, suggest a creative recipe using it.
      - If you are providing a recipe, you MUST return ONLY a JSON object. 
   - Do NOT include any intro text like "Acha-ji" or "Here is your recipe" inside the same message as a recipe.
   - Use these keys: "name", "prepTime", "ingredients", "instructions".
@@ -100,7 +101,7 @@ app.post("/api/ai/recipe", async (req, res) => {
      
       payload = message;
     }
-    const result = await chat.sendMessage(message);
+    const result = await chat.sendMessage(payload);
     const responseText = result.response.text();
 
 
