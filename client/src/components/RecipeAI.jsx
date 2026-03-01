@@ -34,7 +34,7 @@ const fileToGenerativePart = async (file) => {
 
  
   const currentInput = input;
-  const currentImage = [...selectedImages];
+  const currentImages = [...selectedImages];
   const finalMessageText = currentInput.trim() || "What can I make with this?";
   const userMsg = { role: "user", text: finalMessageText,imagePreview: currentImages.map(img => URL.createObjectURL(img))};
   const updatedMessages = [...messages, userMsg];

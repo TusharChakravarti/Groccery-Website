@@ -98,7 +98,7 @@ app.post("/api/ai/recipe", async (req, res) => {
       });
         payload.push(message);
     } else {
-   payload = [message];
+   payload = message;
       
     }
     const result = await chat.sendMessage(payload);
