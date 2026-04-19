@@ -18,13 +18,13 @@ export const register = async (req, res) => {
         
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
 
-        res.cookie('userToken', token, {
-            httpOnly: true,  // Prevent JavaScript to access cookie
-            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // CSRF Production
-            maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time
-            path: '/'
-        })
+         res.cookie('userToken', token, {
+    httpOnly: true,
+    secure: true,        // ALWAYS true on Render (HTTPS)
+    sameSite: 'none',    // REQUIRED for cross-site (Vercel ↔ Render)
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/'
+});
         return res.json({success: true, user: {email: user.email, name: user.name}});
     } catch (error) {
         console.log(error.message);
