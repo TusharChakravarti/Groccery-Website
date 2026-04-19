@@ -14,7 +14,11 @@ function Login() {
     const onSubmitHandler = async (e) => {
       try{
         e.preventDefault();
-        const { data } = await axios.post(`/api/user/${state}`,  {name, email, password});
+        const { data } = await axios.post(
+  `/api/user/${state}`,
+  { name, email, password },
+  { withCredentials: true }
+);
         if(data.success){
           navigate('/');
           await fetchUser();
