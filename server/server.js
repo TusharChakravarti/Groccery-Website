@@ -29,14 +29,16 @@ const allowedOrigins = ['http://localhost:5173', 'https://my-app.vercel.app'];
 
 app.use(cors({
     origin: (origin, callback) => {
+        const allowedOrigins = ['http://localhost:5173', 'https://my-app.vercel.app'];
         if(!origin || allowedOrigins.includes(origin)){
-            callback(null, true);  // ✅ allow
+            callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));  // ❌ block
+            callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true
 }));
+
 // Stripe Webhook (must be before express.json)
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
