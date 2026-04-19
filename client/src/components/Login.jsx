@@ -20,6 +20,7 @@ function Login() {
   { withCredentials: true }
 );
         if(data.success){
+           toast.success("Logged In!")
           navigate('/');
           await fetchUser();
           setShowUserLogin(false);
