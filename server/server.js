@@ -25,7 +25,8 @@ await connectDB();
 await connectCloudinary();
 
 // Allow multiple origins
-const allowedOrigins = ['http://localhost:5173', 'https://my-app.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://khaofresh-eta.vercel.app'];
+
 
 app.use(cors({
     origin: (origin, callback) => {
