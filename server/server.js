@@ -27,6 +27,18 @@ await connectCloudinary();
 // Allow multiple origins
 const allowedOrigins = ['http://localhost:5173', 'https://khaofresh-eta.vercel.app'];
 
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 // Stripe Webhook (must be before express.json)
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks);
 
